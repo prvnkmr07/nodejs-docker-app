@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Deploy to EC2
       uses: appleboy/ssh-action@v1.0.0
@@ -19,13 +19,12 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd /home/ec2-user/myapp
+          git pull origin main
 
-      script: |
-  cd /home/ec2-user/myapp
-  git pull origin main
+          docker stop node-app-container || true
+          docker rm node-app-container || true
 
-  docker stop node-app-container || true
-  docker rm node-app-container || true
-
-  docker build -t node-app .
-  docker run -d -p 3000:3000 --name node-app-container node-app 
+          docker build -t node-app .
+          docker run -d -p 3000:3000 --name node-app-container node-app
