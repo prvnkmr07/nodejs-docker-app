@@ -1,7 +1,7 @@
 const http = require('http');
 
 const server = http.createServer((req, res) => {
-  res.write("Hello from Node.js on EC2 🚀");
+  res.write("Hello from CI/CD 🚀");
   res.end();
 });
 
